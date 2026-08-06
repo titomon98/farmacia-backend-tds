@@ -7,15 +7,18 @@ exports.typeOrmConfig = {
     inject: [config_1.ConfigService],
     useFactory: (config) => ({
         type: 'postgres',
-        host: config.get('DB_HOST', 'localhost'),
-        port: Number(config.get('DB_PORT', '5432')),
-        username: config.get('DB_USERNAME', ''),
-        password: config.get('DB_PASSWORD', ''),
-        database: config.get('DB_DATABASE', 'farmacia_tds'),
-        schema: config.get('DB_SCHEMA', 'farmacia'),
+        host: config.getOrThrow<string>('DB_HOST'),
+        port: parseInt(config.getOrThrow<string>('DB_PORT'), 10),
+        username: config.getOrThrow<string>('DB_USERNAME'),
+        password: config.getOrThrow<string>('DB_PASSWORD'),
+        database: config.getOrThrow<string>('DB_NAME'),
+        schema: config.getOrThrow<string>('DB_SCHEMA'),
         autoLoadEntities: true,
-        synchronize: config.get('DB_SYNCHRONIZE', 'false') === 'true',
-        logging: config.get('DB_LOGGING', 'false') === 'true',
+        synchronize: config.getOrThrow<string>('DB_SYNCHRONIZE'),
+        logging: config.getOrThrow<string>('DB_LOGGING'),
+        ssl: config.getOrThrow<string>('DB_SSL') === 'true'
+            ? { rejectUnauthorized: false }
+            : false
     }),
 };
 //# sourceMappingURL=typeorm.config.js.map
